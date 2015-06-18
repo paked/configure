@@ -7,10 +7,14 @@ import (
 	"strings"
 )
 
+// NewEnvironment creates a new instance of the Environment Checker.
 func NewEnvironment() *Environment {
 	return &Environment{}
 }
 
+// Environment is a configeur.Checker. It retrieves values from the host OS's environment variables.
+// In this process, it will take a flag-like name, and convert it to a environmnet-like name. The process
+// for this is to change all characters to upper case, and then replace hyphons with underscores.
 type Environment struct {
 }
 
@@ -36,6 +40,7 @@ func (e Environment) process(name string) string {
 	return name
 }
 
+// Int attempts to retrieve a value from the environment variables.
 func (e Environment) Int(name string) (int, error) {
 	v, err := e.value(name)
 	if err != nil {
@@ -50,6 +55,7 @@ func (e Environment) Int(name string) (int, error) {
 	return i, nil
 }
 
+// String attempts to retrieve a value from the environment variables.
 func (e Environment) String(name string) (string, error) {
 	return e.value(name)
 }

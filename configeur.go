@@ -2,12 +2,23 @@ package configeur
 
 import "fmt"
 
-// Checker is the interface which external adders must comply to
+// Checker is the interface which external "checkers" must comply to. If a
+// retrieval fails the next Checker in the Configeur.stack stack will be called. Checker's are added to the stack through the configeur.Use method.
 type Checker interface {
-	Int(name string) (int, error)       // Get the integer value from the source
-	String(name string) (string, error) // Get a string value from a source
+	// Int finds and retrieves an integer by name. If it finds the value it will
+	// return it, and if it doesn't an error will be returned and the next Checker
+	// in the stack will be called.
+	Int(name string) (int, error)
+
+	// String finds and retrieves an string by name. If it finds the value it will
+	// return it, and if it doesn't an error will be returned and the next Checker
+	// in the stack will be called.
+	String(name string) (string, error)
 }
 
+// Configeur is a stack of Checkers which are used to retrieve configuration values. It aims
+// to have a similar API as the flag package in the standard library. Checker's are evaluated
+// in the same order they are added through the initalization and Configeur.Use functions.
 type Configeur struct {
 	strings map[string]*stringOption // The requested string values
 	ints    map[string]*intOption    // The requested integer values
@@ -42,12 +53,13 @@ func (c *Configeur) String(name, def, description string) *string {
 	return &opt.value
 }
 
-// Use adds any amount of new checkers. Useful for when you want to configure
-// a Checker before adding it to the stack.
+// Use adds a variable amounts of new Checkers to the stack.
 func (c *Configeur) Use(checkers ...Checker) {
 	c.stack = append(c.stack, checkers...)
 }
 
+// Parse populates the pointers returned through the Configeur.Int and Configeur.String
+// methods.
 func (c *Configeur) Parse() {
 	for _, opt := range c.strings {
 		changed := false
@@ -90,8 +102,8 @@ func (c *Configeur) Parse() {
 	}
 }
 
-// New creates a new configeur instance, immediately ready to be used.
-// It takes a slice of Checker interfaces which will be used to retrieve values.
+// New returns a pointer to a new Configeur instance with a stack
+// provided through the variadic stack variable.
 func New(stack ...Checker) *Configeur {
 	c := &Configeur{
 		strings: make(map[string]*stringOption),
@@ -100,14 +112,6 @@ func New(stack ...Checker) *Configeur {
 	}
 
 	return c
-}
-
-// Classic returns the default set of Checkers: Environemnt
-func Classic(extras ...Checker) []Checker {
-	checkers := []Checker{Environment{}}
-	checkers = append(checkers, extras...)
-
-	return checkers
 }
 
 type intOption struct {
