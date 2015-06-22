@@ -22,6 +22,7 @@ func init() {
 	}
 
 	// add configuration middlewears to the stack
+	conf.Use(configeur.NewFlag())
 	conf.Use(configeur.NewJSON(config))
 	conf.Use(configeur.NewEnvironment())
 }

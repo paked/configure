@@ -20,37 +20,62 @@ type Checker interface {
 // to have a similar API as the flag package in the standard library. Checker's are evaluated
 // in the same order they are added through the initalization and Configeur.Use functions.
 type Configeur struct {
-	strings map[string]*stringOption // The requested string values
-	ints    map[string]*intOption    // The requested integer values
-	stack   []Checker                // A list of all the "middlewear" which is used to find a value
+	options map[string]*option // A map of all of the provided options
+	stack   []Checker          // A list of all the "middlewear" which is used to find a value
 }
 
 // Int declares an int value. A pointer is returned that will
 // point to the value after c.Parse() has been called.
 func (c *Configeur) Int(name string, def int, description string) *int {
-	opt := &intOption{
-		name:        name,
-		def:         def,
-		description: description,
+	v := c.option(name, def, description, intType)
+	i, ok := v.(*int)
+
+	if !ok {
+		fmt.Printf("could not retrieve pointer to value for name %v\n", name)
+		return nil
 	}
 
-	c.ints[name] = opt
-
-	return &opt.value
+	return i
 }
 
 // String declares a string value. A pointer is returned that will
 // point to the value after c.Parse() has been called.
 func (c *Configeur) String(name, def, description string) *string {
-	opt := &stringOption{
+	v := c.option(name, def, description, stringType)
+	s, ok := v.(*string)
+
+	if !ok {
+		fmt.Printf("could not retrieve pointer to value for name %v\n", name)
+		return nil
+	}
+
+	return s
+}
+
+// option returns a pointer of a type specified through the valueType parameter.
+//
+// note: You could potentially find the value to be pointed to through the def
+// parameter, but this would pose an issue when one is not provided.
+func (c *Configeur) option(name string, def interface{}, description string, typ valueType) interface{} {
+	opt := &option{
 		name:        name,
 		def:         def,
 		description: description,
+		typ:         typ,
 	}
 
-	c.strings[name] = opt
+	c.options[name] = opt
 
-	return &opt.value
+	switch opt.typ {
+	case stringType:
+		var s string
+		opt.value = &s
+	case intType:
+		var i int
+		opt.value = &i
+	}
+
+	return opt.value
 }
 
 // Use adds a variable amounts of new Checkers to the stack.
@@ -61,42 +86,45 @@ func (c *Configeur) Use(checkers ...Checker) {
 // Parse populates the pointers returned through the Configeur.Int and Configeur.String
 // methods.
 func (c *Configeur) Parse() {
-	for _, opt := range c.strings {
+	for _, opt := range c.options {
 		changed := false
 		for _, checker := range c.stack {
-			v, err := checker.String(opt.name)
-			if err != nil {
-				continue
+			switch opt.typ {
+			case stringType:
+				s, err := checker.String(opt.name)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+
+				z, ok := opt.value.(*string)
+				if !ok {
+					fmt.Println("that variable does not fit the value")
+				}
+
+				*z = s
+			case intType:
+				i, err := checker.Int(opt.name)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+
+				z, ok := opt.value.(*int)
+				if !ok {
+					fmt.Println("that variable does not fit the value")
+				}
+
+				*z = i
 			}
 
 			changed = true
-			opt.value = v
+			fmt.Println("changed", opt.value)
 			break
 		}
 
 		if !changed {
-			fmt.Printf("set %v to default (%v)", opt, opt.def)
-			opt.value = opt.def
-		}
-	}
-
-	// so much duplicated code?
-	for _, opt := range c.ints {
-		changed := false
-		for _, checker := range c.stack {
-			v, err := checker.Int(opt.name)
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-
-			opt.value = v
-			changed = true
-			break
-		}
-
-		if !changed {
-			fmt.Printf("set %v to default (%v)\n", opt.name, opt.def)
+			fmt.Printf("set %v to default[%v]\n", opt.name, opt.def)
 			opt.value = opt.def
 		}
 	}
@@ -106,32 +134,42 @@ func (c *Configeur) Parse() {
 // provided through the variadic stack variable.
 func New(stack ...Checker) *Configeur {
 	c := &Configeur{
-		strings: make(map[string]*stringOption),
-		ints:    make(map[string]*intOption),
+		options: make(map[string]*option),
 		stack:   stack,
 	}
 
 	return c
 }
 
-type intOption struct {
+type valueType int
+
+func (vt valueType) String() string {
+	name := ""
+	switch vt {
+	case intType:
+		name = "Integer"
+	case stringType:
+		name = "String"
+	default:
+		return "NOT A valueType"
+	}
+
+	return name
+}
+
+const (
+	intType valueType = iota + 1
+	stringType
+)
+
+type option struct {
 	name        string
 	description string
-	def         int
-	value       int
+	def         interface{}
+	value       interface{}
+	typ         valueType
 }
 
-func (io intOption) String() string {
-	return fmt.Sprintf("%v(%v)", io.name, io.description)
-}
-
-type stringOption struct {
-	name        string
-	description string
-	def         string
-	value       string
-}
-
-func (so stringOption) String() string {
-	return fmt.Sprintf("[%v(%v)]", so.name, so.description)
+func (o option) String() string {
+	return fmt.Sprintf("%v(%v)[%v]", o.name, o.description, o.typ)
 }
