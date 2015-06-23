@@ -59,6 +59,15 @@ func (f Flag) Int(name string) (int, error) {
 	return i, nil
 }
 
+func (f *Flag) Bool(name string) (bool, error) {
+	v, err := f.value(name)
+	if err != nil {
+		return false, err
+	}
+
+	return strconv.ParseBool(v)
+}
+
 func (f Flag) String(name string) (string, error) {
 	return f.value(name)
 }

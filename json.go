@@ -61,6 +61,15 @@ func (j *JSON) Int(name string) (int, error) {
 	return i, nil
 }
 
+func (j *JSON) Bool(name string) (bool, error) {
+	v, err := j.value(name)
+	if err != nil {
+		return false, err
+	}
+
+	return strconv.ParseBool(v)
+}
+
 // String returns the integer if it exists within the unmarshalled JSON io.Reader.
 func (j *JSON) String(name string) (string, error) {
 	return j.value(name)

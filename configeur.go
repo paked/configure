@@ -14,6 +14,9 @@ type Checker interface {
 	// return it, and if it doesn't an error will be returned and the next Checker
 	// in the stack will be called.
 	String(name string) (string, error)
+
+	// Bool finds and retrieves a boolean value by name.
+	Bool(name string) (bool, error)
 }
 
 // Configeur is a stack of Checkers which are used to retrieve configuration values. It aims
@@ -52,6 +55,20 @@ func (c *Configeur) String(name, def, description string) *string {
 	return s
 }
 
+// Bool declares a new boolean option. A pointer is returned to this
+// value that will be filled after Configeur.Parse() has been called.
+func (c *Configeur) Bool(name string, def bool, description string) *bool {
+	v := c.option(name, def, description, boolType)
+	b, ok := v.(*bool)
+
+	if !ok {
+		fmt.Printf("could not retrieve pointer to that value\n")
+		return nil
+	}
+
+	return b
+}
+
 // option returns a pointer of a type specified through the valueType parameter.
 //
 // note: You could potentially find the value to be pointed to through the def
@@ -73,6 +90,9 @@ func (c *Configeur) option(name string, def interface{}, description string, typ
 	case intType:
 		var i int
 		opt.value = &i
+	case boolType:
+		var b bool
+		opt.value = &b
 	}
 
 	return opt.value
@@ -89,6 +109,7 @@ func (c *Configeur) Parse() {
 	for _, opt := range c.options {
 		changed := false
 		for _, checker := range c.stack {
+			// TODO undupe
 			switch opt.typ {
 			case stringType:
 				s, err := checker.String(opt.name)
@@ -116,6 +137,19 @@ func (c *Configeur) Parse() {
 				}
 
 				*z = i
+			case boolType:
+				b, err := checker.Bool(opt.name)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+
+				z, ok := opt.value.(*bool)
+				if !ok {
+					fmt.Println("that var doesnt fit thy value")
+				}
+
+				*z = b
 			}
 
 			changed = true
@@ -150,6 +184,8 @@ func (vt valueType) String() string {
 		name = "Integer"
 	case stringType:
 		name = "String"
+	case boolType:
+		name = "Boolean"
 	default:
 		return "NOT A valueType"
 	}
@@ -160,6 +196,7 @@ func (vt valueType) String() string {
 const (
 	intType valueType = iota + 1
 	stringType
+	boolType
 )
 
 type option struct {

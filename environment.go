@@ -55,6 +55,15 @@ func (e Environment) Int(name string) (int, error) {
 	return i, nil
 }
 
+func (e *Environment) Bool(name string) (bool, error) {
+	v, err := e.value(name)
+	if err != nil {
+		return false, err
+	}
+
+	return strconv.ParseBool(v)
+}
+
 // String attempts to retrieve a value from the environment variables.
 func (e Environment) String(name string) (string, error) {
 	return e.value(name)
