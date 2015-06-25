@@ -85,14 +85,11 @@ func (c *Configeur) option(name string, def interface{}, description string, typ
 
 	switch opt.typ {
 	case stringType:
-		var s string
-		opt.value = &s
+		opt.value = new(string)
 	case intType:
-		var i int
-		opt.value = &i
+		opt.value = new(int)
 	case boolType:
-		var b bool
-		opt.value = &b
+		opt.value = new(bool)
 	}
 
 	return opt.value
@@ -109,7 +106,6 @@ func (c *Configeur) Parse() {
 	for _, opt := range c.options {
 		changed := false
 		for _, checker := range c.stack {
-			// TODO undupe
 			switch opt.typ {
 			case stringType:
 				s, err := checker.String(opt.name)
@@ -143,8 +139,6 @@ func (c *Configeur) Parse() {
 
 		if !changed {
 			opt.set(opt.def)
-
-			opt.value = opt.def
 		}
 	}
 }
