@@ -118,12 +118,7 @@ func (c *Configeur) Parse() {
 					continue
 				}
 
-				z, ok := opt.value.(*string)
-				if !ok {
-					fmt.Println("that variable does not fit the value")
-				}
-
-				*z = s
+				opt.set(s)
 			case intType:
 				i, err := checker.Int(opt.name)
 				if err != nil {
@@ -131,12 +126,7 @@ func (c *Configeur) Parse() {
 					continue
 				}
 
-				z, ok := opt.value.(*int)
-				if !ok {
-					fmt.Println("that variable does not fit the value")
-				}
-
-				*z = i
+				opt.set(i)
 			case boolType:
 				b, err := checker.Bool(opt.name)
 				if err != nil {
@@ -144,21 +134,16 @@ func (c *Configeur) Parse() {
 					continue
 				}
 
-				z, ok := opt.value.(*bool)
-				if !ok {
-					fmt.Println("that var doesnt fit thy value")
-				}
-
-				*z = b
+				opt.set(b)
 			}
 
 			changed = true
-			fmt.Println("changed", opt.value)
 			break
 		}
 
 		if !changed {
-			fmt.Printf("set %v to default[%v]\n", opt.name, opt.def)
+			opt.set(opt.def)
+
 			opt.value = opt.def
 		}
 	}
@@ -209,4 +194,31 @@ type option struct {
 
 func (o option) String() string {
 	return fmt.Sprintf("%v(%v)[%v]", o.name, o.description, o.typ)
+}
+
+func (o *option) set(value interface{}) {
+	switch value.(type) {
+	case bool:
+		z, ok := o.value.(*bool)
+		if !ok {
+			fmt.Println("that var doesnt fit thy value")
+		}
+
+		*z = value.(bool)
+	case int:
+		z, ok := o.value.(*int)
+		if !ok {
+			fmt.Println("that var doesnt fit thy value")
+		}
+
+		*z = value.(int)
+
+	case string:
+		z, ok := o.value.(*string)
+		if !ok {
+			fmt.Println("that var doesnt fit thy value")
+		}
+
+		*z = value.(string)
+	}
 }
