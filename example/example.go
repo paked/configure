@@ -13,6 +13,7 @@ var (
 	// declare flags / things to configure
 	x = conf.Int("x", 0, "how many times you want the string repeated!")
 	s = conf.String("s", "default bro", "a selected string")
+	n = conf.Bool("n", true, "whether or not you want new lines")
 )
 
 func init() {
@@ -33,6 +34,10 @@ func main() {
 	fmt.Printf("printing string `%v` %v time(s)\n", *s, *x)
 
 	for i := 0; i < *x; i++ {
-		fmt.Println(*s)
+		fmt.Print(*s)
+
+		if *n {
+			fmt.Print("\n")
+		}
 	}
 }

@@ -3,8 +3,8 @@ package configeur
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
-	"strconv"
 )
 
 // NewJSON returns a new instance of the JSON Checker. It takes an io.Reader in it's
@@ -12,7 +12,7 @@ import (
 // into a map[string]string.
 func NewJSON(r io.Reader) *JSON {
 	return &JSON{
-		values: make(map[string]string),
+		values: make(map[string]interface{}),
 		read:   false,
 		file:   r,
 	}
@@ -20,15 +20,15 @@ func NewJSON(r io.Reader) *JSON {
 
 // JSON represents the JSON Checker. It reads an io.Reader and then pulls a value out of a map[string]string.
 type JSON struct {
-	values map[string]string
+	values map[string]interface{}
 	read   bool
 	file   io.Reader
 }
 
-func (j *JSON) value(name string) (string, error) {
+func (j *JSON) value(name string) (interface{}, error) {
 	if !j.read {
 		dec := json.NewDecoder(j.file)
-		j.values = make(map[string]string)
+		j.values = make(map[string]interface{})
 
 		err := dec.Decode(&j.values)
 		if err != nil {
@@ -40,7 +40,7 @@ func (j *JSON) value(name string) (string, error) {
 
 	val, ok := j.values[name]
 	if !ok {
-		return "", errors.New("that variable does not exist")
+		return nil, errors.New("that variable does not exist")
 	}
 
 	return val, nil
@@ -53,12 +53,12 @@ func (j *JSON) Int(name string) (int, error) {
 		return 0, err
 	}
 
-	i, err := strconv.Atoi(v)
-	if err != nil {
-		return 0, err
+	f, ok := v.(float64)
+	if !ok {
+		return 0, errors.New(fmt.Sprintf("%T unable", v))
 	}
 
-	return i, nil
+	return int(f), nil
 }
 
 func (j *JSON) Bool(name string) (bool, error) {
@@ -67,10 +67,25 @@ func (j *JSON) Bool(name string) (bool, error) {
 		return false, err
 	}
 
-	return strconv.ParseBool(v)
+	b, ok := v.(bool)
+	if !ok {
+		return false, errors.New("unable to cast")
+	}
+
+	return b, nil
 }
 
 // String returns the integer if it exists within the unmarshalled JSON io.Reader.
 func (j *JSON) String(name string) (string, error) {
-	return j.value(name)
+	v, err := j.value(name)
+	if err != nil {
+		return "", err
+	}
+
+	s, ok := v.(string)
+	if !ok {
+		return "", errors.New(fmt.Sprintf("unable to cast %T", v))
+	}
+
+	return s, nil
 }
