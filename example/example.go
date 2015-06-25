@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/paked/configeur"
@@ -17,14 +18,12 @@ var (
 )
 
 func init() {
-	config, err := os.Open("config.json")
-	if err != nil {
-		panic(err)
-	}
-
 	// add configuration middlewears to the stack
 	conf.Use(configeur.NewFlag())
-	conf.Use(configeur.NewJSON(config))
+	conf.Use(configeur.NewJSON(func() (io.Reader, error) {
+		return os.Open("config.json")
+
+	}))
 	conf.Use(configeur.NewEnvironment())
 }
 

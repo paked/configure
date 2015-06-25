@@ -7,14 +7,14 @@ import (
 	"io"
 )
 
-// NewJSON returns a new instance of the JSON Checker. It takes an io.Reader in it's
-// parameters, which will be used to read the JSON content. The JSON must be marshallable
-// into a map[string]string.
-func NewJSON(r io.Reader) *JSON {
+// NewJSON returns an instance of the JSON checker. It takes a function
+// which returns an io.Reader which will be called when the first value
+// is recalled. The contents of the io.Reader MUST be decodable into JSON.
+func NewJSON(gen func() (io.Reader, error)) *JSON {
 	return &JSON{
 		values: make(map[string]interface{}),
 		read:   false,
-		file:   r,
+		gen:    gen,
 	}
 }
 
@@ -22,15 +22,20 @@ func NewJSON(r io.Reader) *JSON {
 type JSON struct {
 	values map[string]interface{}
 	read   bool
-	file   io.Reader
+	gen    func() (io.Reader, error)
 }
 
 func (j *JSON) value(name string) (interface{}, error) {
 	if !j.read {
-		dec := json.NewDecoder(j.file)
+		r, err := j.gen()
+		if err != nil {
+			return nil, err
+		}
+
+		dec := json.NewDecoder(r)
 		j.values = make(map[string]interface{})
 
-		err := dec.Decode(&j.values)
+		err = dec.Decode(&j.values)
 		if err != nil {
 			return "", err
 		}
