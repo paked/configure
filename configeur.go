@@ -3,7 +3,8 @@ package configeur
 import "fmt"
 
 // Checker is the interface which external "checkers" must comply to. If a
-// retrieval fails the next Checker in the Configeur.stack stack will be called. Checker's are added to the stack through the configeur.Use method.
+// retrieval fails the next Checker in the Configeur.stack stack will be called.
+// Checker's are added to the stack through the configeur.Use method.
 type Checker interface {
 	// Int finds and retrieves an integer by name. If it finds the value it will
 	// return it, and if it doesn't an error will be returned and the next Checker
