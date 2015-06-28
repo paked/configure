@@ -2,34 +2,29 @@ package configeur
 
 import "fmt"
 
-// Checker is the interface which external "checkers" must comply to. If a
-// retrieval fails the next Checker in the Configeur.stack stack will be called.
-// Checker's are added to the stack through the configeur.Use method.
+// Checker is the interface which external checkers must comply to. In the configeur
+// implementation, if one Checker fails the next one in the stack should be called.
 type Checker interface {
-	// Int finds and retrieves an integer by name. If it finds the value it will
-	// return it, and if it doesn't an error will be returned and the next Checker
-	// in the stack will be called.
+	// Int attempts to get an int value from the data source.
 	Int(name string) (int, error)
 
-	// String finds and retrieves an string by name. If it finds the value it will
-	// return it, and if it doesn't an error will be returned and the next Checker
-	// in the stack will be called.
+	// String attempts to get a string value from the data source.
 	String(name string) (string, error)
 
-	// Bool finds and retrieves a boolean value by name.
+	// Bool attempts to get a bool value from the data source.
 	Bool(name string) (bool, error)
 }
 
-// Configeur is a stack of Checkers which are used to retrieve configuration values. It aims
-// to have a similar API as the flag package in the standard library. Checker's are evaluated
-// in the same order they are added through the initalization and Configeur.Use functions.
+// Configeur is a stack of Checkers which are used to retrieve configuration values. It has a
+// similar API as the flag package in the standard library, and is also partially
+// inspired by negroni. Checkers are evaluated in the same order they are added.
 type Configeur struct {
 	options map[string]*option // A map of all of the provided options
 	stack   []Checker          // A list of all the "middlewear" which is used to find a value
 }
 
-// Int declares an int value. A pointer is returned that will
-// point to the value after c.Parse() has been called.
+// Int defines an int flag with a name, default and description. The return value
+// is a pointer which will be populated with the value of the flag.
 func (c *Configeur) Int(name string, def int, description string) *int {
 	v := c.option(name, def, description, intType)
 	i, ok := v.(*int)
@@ -42,8 +37,8 @@ func (c *Configeur) Int(name string, def int, description string) *int {
 	return i
 }
 
-// String declares a string value. A pointer is returned that will
-// point to the value after c.Parse() has been called.
+// String defines a string flag with a name, default and description. The return value
+// is a pointer which will be populated with the value of the flag.
 func (c *Configeur) String(name, def, description string) *string {
 	v := c.option(name, def, description, stringType)
 	s, ok := v.(*string)
@@ -56,8 +51,8 @@ func (c *Configeur) String(name, def, description string) *string {
 	return s
 }
 
-// Bool declares a new boolean option. A pointer is returned to this
-// value that will be filled after Configeur.Parse() has been called.
+// Bool defines a bool flag with a name, default and description. The return value
+// is a pointer which will be populated with the value of the flag.
 func (c *Configeur) Bool(name string, def bool, description string) *bool {
 	v := c.option(name, def, description, boolType)
 	b, ok := v.(*bool)
@@ -96,13 +91,13 @@ func (c *Configeur) option(name string, def interface{}, description string, typ
 	return opt.value
 }
 
-// Use adds a variable amounts of new Checkers to the stack.
+// Use adds a variable amount of Checkers onto the stack.
 func (c *Configeur) Use(checkers ...Checker) {
 	c.stack = append(c.stack, checkers...)
 }
 
-// Parse populates the pointers returned through the Configeur.Int and Configeur.String
-// methods.
+// Parse populates all of the defined arguments with their values provided by
+// the stacks Checkers.
 func (c *Configeur) Parse() {
 	for _, opt := range c.options {
 		changed := false
