@@ -51,7 +51,7 @@ func (j *JSON) value(name string) (interface{}, error) {
 	return val, nil
 }
 
-// Int returns the integer if it exists within the unmarshalled JSON io.Reader.
+// Int returns an int if it exists within the unmarshalled JSON io.Reader.
 func (j *JSON) Int(name string) (int, error) {
 	v, err := j.value(name)
 	if err != nil {
@@ -66,6 +66,7 @@ func (j *JSON) Int(name string) (int, error) {
 	return int(f), nil
 }
 
+// Bool returns a bool if it exists within the unmarshalled JSON io.Reader.
 func (j *JSON) Bool(name string) (bool, error) {
 	v, err := j.value(name)
 	if err != nil {
@@ -80,7 +81,7 @@ func (j *JSON) Bool(name string) (bool, error) {
 	return b, nil
 }
 
-// String returns the integer if it exists within the unmarshalled JSON io.Reader.
+// String returns a string if it exists within the unmarshalled JSON io.Reader.
 func (j *JSON) String(name string) (string, error) {
 	v, err := j.value(name)
 	if err != nil {

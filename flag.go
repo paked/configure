@@ -45,6 +45,7 @@ func (f Flag) value(name string) (string, error) {
 	return "", errors.New("could not find that value")
 }
 
+// Int returns an int if it exists in the set flags.
 func (f Flag) Int(name string) (int, error) {
 	v, err := f.value(name)
 	if err != nil {
@@ -59,6 +60,7 @@ func (f Flag) Int(name string) (int, error) {
 	return i, nil
 }
 
+// Bool returns a bool if it exists in the set flags.
 func (f *Flag) Bool(name string) (bool, error) {
 	v, err := f.value(name)
 	if err != nil {
@@ -68,6 +70,7 @@ func (f *Flag) Bool(name string) (bool, error) {
 	return strconv.ParseBool(v)
 }
 
+// String returns a string if it exists in the set flags.
 func (f Flag) String(name string) (string, error) {
 	return f.value(name)
 }

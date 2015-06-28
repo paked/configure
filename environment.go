@@ -40,7 +40,7 @@ func (e Environment) process(name string) string {
 	return name
 }
 
-// Int attempts to retrieve a value from the environment variables.
+// Int returns an int if it exists in the set environment variables.
 func (e Environment) Int(name string) (int, error) {
 	v, err := e.value(name)
 	if err != nil {
@@ -55,6 +55,7 @@ func (e Environment) Int(name string) (int, error) {
 	return i, nil
 }
 
+// Bool returns a bool if it exists in the set environment variables.
 func (e *Environment) Bool(name string) (bool, error) {
 	v, err := e.value(name)
 	if err != nil {
@@ -64,7 +65,7 @@ func (e *Environment) Bool(name string) (bool, error) {
 	return strconv.ParseBool(v)
 }
 
-// String attempts to retrieve a value from the environment variables.
+// String returns a string if it exists in the set environment variables.
 func (e Environment) String(name string) (string, error) {
 	return e.value(name)
 }
