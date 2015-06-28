@@ -106,7 +106,6 @@ func (c *Configeur) Parse() {
 			case stringType:
 				s, err := checker.String(opt.name)
 				if err != nil {
-					fmt.Println(err)
 					continue
 				}
 
@@ -114,7 +113,6 @@ func (c *Configeur) Parse() {
 			case intType:
 				i, err := checker.Int(opt.name)
 				if err != nil {
-					fmt.Println(err)
 					continue
 				}
 
@@ -122,7 +120,6 @@ func (c *Configeur) Parse() {
 			case boolType:
 				b, err := checker.Bool(opt.name)
 				if err != nil {
-					fmt.Println(err)
 					continue
 				}
 
@@ -191,14 +188,14 @@ func (o *option) set(value interface{}) {
 	case bool:
 		z, ok := o.value.(*bool)
 		if !ok {
-			fmt.Println("that var doesnt fit thy value")
+			return
 		}
 
 		*z = value.(bool)
 	case int:
 		z, ok := o.value.(*int)
 		if !ok {
-			fmt.Println("that var doesnt fit thy value")
+			return
 		}
 
 		*z = value.(int)
@@ -206,7 +203,7 @@ func (o *option) set(value interface{}) {
 	case string:
 		z, ok := o.value.(*string)
 		if !ok {
-			fmt.Println("that var doesnt fit thy value")
+			return
 		}
 
 		*z = value.(string)
