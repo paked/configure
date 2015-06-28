@@ -28,6 +28,7 @@ func init() {
 }
 
 func main() {
+	// populate the pointers
 	conf.Parse()
 
 	fmt.Printf("printing string `%v` %v time(s)\n", *s, *x)
