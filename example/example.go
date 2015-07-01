@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/paked/configeur"
 )
@@ -20,10 +18,7 @@ var (
 func init() {
 	// add configuration middlewears to the stack
 	conf.Use(configeur.NewFlag())
-	conf.Use(configeur.NewJSON(func() (io.Reader, error) {
-		return os.Open("config.json")
-	}))
-
+	conf.Use(configeur.NewJSONFromFile("config.json"))
 	conf.Use(configeur.NewEnvironment())
 }
 

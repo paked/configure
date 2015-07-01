@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 )
 
 // NewJSON returns an instance of the JSON checker. It takes a function
@@ -12,21 +13,27 @@ import (
 // is recalled. The contents of the io.Reader MUST be decodable into JSON.
 func NewJSON(gen func() (io.Reader, error)) *JSON {
 	return &JSON{
-		values: make(map[string]interface{}),
-		read:   false,
-		gen:    gen,
+		gen: gen,
 	}
+}
+
+// NewJSONFromFile returns an instance of the JSON checker. It reads its
+// data from a file which its location has been specified through the path
+// parameter
+func NewJSONFromFile(path string) *JSON {
+	return NewJSON(func() (io.Reader, error) {
+		return os.Open(path)
+	})
 }
 
 // JSON represents the JSON Checker. It reads an io.Reader and then pulls a value out of a map[string]string.
 type JSON struct {
 	values map[string]interface{}
-	read   bool
 	gen    func() (io.Reader, error)
 }
 
 func (j *JSON) value(name string) (interface{}, error) {
-	if !j.read {
+	if j.values == nil {
 		r, err := j.gen()
 		if err != nil {
 			return nil, err
@@ -40,7 +47,6 @@ func (j *JSON) value(name string) (interface{}, error) {
 			return "", err
 		}
 
-		j.read = true
 	}
 
 	val, ok := j.values[name]
