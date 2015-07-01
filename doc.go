@@ -11,5 +11,5 @@
 // That is a, Int method, String method and a Bool method. To retrieve their respective data types.
 // If you do create your own Checkers I would be more than happy to add a link to them somewhere in the repository.
 //
-// A standard use-case can be found in the example folder.
+// A standard use-case can be found in the example folder and a getting started guide can be found on github (http://github.com/paked/configeur).
 package configeur
