@@ -18,8 +18,8 @@ func NewFlag() *Flag {
 	return f
 }
 
-// Flag is an ULTRA simple flag parser for strings and ints.
-// it expects flags in the format --x=2 (where x is the var name
+// Flag is an ULTRA simple flag parser for strings, ints and bools.
+// It expects flags in the format --x=2 (where x is the var name
 // and 2 is the value)
 type Flag struct {
 	args []string
