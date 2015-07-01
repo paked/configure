@@ -10,15 +10,15 @@ var (
 	// set up a configeur instance with no stack
 	conf = configeur.New()
 	// declare flags / things to configure
-	x = conf.Int("x", 0, "how many times you want the string repeated!")
-	s = conf.String("s", "default bro", "a selected string")
-	n = conf.Bool("n", true, "whether or not you want new lines")
+	amount   = conf.Int("amount", 0, "how many times you want the string repeated!")
+	message  = conf.String("message", "Echo!", "a selected string")
+	newlines = conf.Bool("newlines", true, "whether or not you want new lines")
 )
 
 func init() {
 	// add configuration middlewears to the stack
 	conf.Use(configeur.NewFlag())
-	conf.Use(configeur.NewJSONFromFile("config.json"))
+	conf.Use(configeur.NewJSONFromFile("echo.json"))
 	conf.Use(configeur.NewEnvironment())
 }
 
@@ -26,12 +26,10 @@ func main() {
 	// populate the pointers
 	conf.Parse()
 
-	fmt.Printf("printing string `%v` %v time(s)\n", *s, *x)
+	for i := 0; i < *amount; i++ {
+		fmt.Print(*message)
 
-	for i := 0; i < *x; i++ {
-		fmt.Print(*s)
-
-		if *n {
+		if *newlines {
 			fmt.Print("\n")
 		}
 	}
