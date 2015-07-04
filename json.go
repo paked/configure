@@ -26,7 +26,7 @@ func NewJSONFromFile(path string) *JSON {
 	})
 }
 
-// JSON represents the JSON Checker. It reads an io.Reader and then pulls a value out of a map[string]string.
+// JSON represents the JSON Checker. It reads an io.Reader and then pulls a value out of a map[string]interface{}.
 type JSON struct {
 	values map[string]interface{}
 	gen    func() (io.Reader, error)
@@ -57,7 +57,7 @@ func (j *JSON) value(name string) (interface{}, error) {
 	return val, nil
 }
 
-// Int returns an int if it exists within the unmarshalled JSON io.Reader.
+// Int returns an int if it exists within the marshalled JSON io.Reader.
 func (j *JSON) Int(name string) (int, error) {
 	v, err := j.value(name)
 	if err != nil {
@@ -72,7 +72,7 @@ func (j *JSON) Int(name string) (int, error) {
 	return int(f), nil
 }
 
-// Bool returns a bool if it exists within the unmarshalled JSON io.Reader.
+// Bool returns a bool if it exists within the marshalled JSON io.Reader.
 func (j *JSON) Bool(name string) (bool, error) {
 	v, err := j.value(name)
 	if err != nil {
@@ -87,7 +87,7 @@ func (j *JSON) Bool(name string) (bool, error) {
 	return b, nil
 }
 
-// String returns a string if it exists within the unmarshalled JSON io.Reader.
+// String returns a string if it exists within the marshalled JSON io.Reader.
 func (j *JSON) String(name string) (string, error) {
 	v, err := j.value(name)
 	if err != nil {
