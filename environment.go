@@ -18,6 +18,10 @@ func NewEnvironment() *Environment {
 type Environment struct {
 }
 
+func (e Environment) Setup() error {
+	return nil
+}
+
 // value takes a string in normal flag syntax (hello-world) and changes
 // it into a environment variable syntax (HELLO_WORLD). It returns the
 // the value associated with that env.

@@ -32,23 +32,19 @@ type JSON struct {
 	gen    func() (io.Reader, error)
 }
 
-func (j *JSON) value(name string) (interface{}, error) {
-	if j.values == nil {
-		r, err := j.gen()
-		if err != nil {
-			return nil, err
-		}
-
-		dec := json.NewDecoder(r)
-		j.values = make(map[string]interface{})
-
-		err = dec.Decode(&j.values)
-		if err != nil {
-			return "", err
-		}
-
+func (j *JSON) Setup() error {
+	r, err := j.gen()
+	if err != nil {
+		return err
 	}
 
+	dec := json.NewDecoder(r)
+	j.values = make(map[string]interface{})
+
+	return dec.Decode(&j.values)
+}
+
+func (j *JSON) value(name string) (interface{}, error) {
 	val, ok := j.values[name]
 	if !ok {
 		return nil, errors.New("that variable does not exist")

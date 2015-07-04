@@ -25,6 +25,16 @@ type Flag struct {
 	args []string
 }
 
+func (f Flag) Setup() error {
+	for _, arg := range f.args {
+		if arg == "-h" {
+			fmt.Println("PRINTING DEFAULTS HERE")
+		}
+	}
+
+	return nil
+}
+
 func (f Flag) value(name string) (string, error) {
 	for _, arg := range f.args {
 		// --x=2 -> x=2

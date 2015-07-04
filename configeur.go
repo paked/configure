@@ -1,10 +1,15 @@
 package configeur
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // Checker is the interface which external checkers must comply to. In the configeur
 // implementation, if one Checker fails the next one in the stack should be called.
 type Checker interface {
+	// Setup initializes the Checker
+	Setup() error
 	// Int attempts to get an int value from the data source.
 	Int(name string) (int, error)
 
@@ -96,9 +101,20 @@ func (c *Configeur) Use(checkers ...Checker) {
 	c.stack = append(c.stack, checkers...)
 }
 
+func (c *Configeur) setup() {
+	for _, checker := range c.stack {
+		err := checker.Setup()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Forced to abort because %T is failing to setup: %v\n", checker, err)
+			os.Exit(1)
+		}
+	}
+}
+
 // Parse populates all of the defined arguments with their values provided by
 // the stacks Checkers.
 func (c *Configeur) Parse() {
+	c.setup()
 	for _, opt := range c.options {
 		changed := false
 		for _, checker := range c.stack {
