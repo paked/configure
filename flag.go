@@ -12,7 +12,19 @@ import (
 // flag source.
 func NewFlag() *Flag {
 	f := &Flag{
-		args: os.Args,
+		args:     os.Args,
+		defaults: defaultsPrinter,
+	}
+
+	return f
+}
+
+// NewFlagWithUsage returns a new instance of the Flag Checker with a custom
+// usage printer. It uses os.Args as its flag source.
+func NewFlagWithUsage(defaulter func() string) *Flag {
+	f := &Flag{
+		args:     os.Args,
+		defaults: defaulter,
 	}
 
 	return f
@@ -20,15 +32,18 @@ func NewFlag() *Flag {
 
 // Flag is an ULTRA simple flag parser for strings, ints and bools.
 // It expects flags in the format --x=2 (where x is the var name
-// and 2 is the value)
+// and 2 is the value). It can be provided with a "usage printer",
+// which by default will be printed when the "-h" flag is used.
 type Flag struct {
-	args []string
+	args     []string
+	defaults func() string
 }
 
 func (f Flag) Setup() error {
 	for _, arg := range f.args {
 		if arg == "-h" {
-			fmt.Println("PRINTING DEFAULTS HERE")
+			fmt.Fprintf(os.Stderr, f.defaults())
+			os.Exit(0)
 		}
 	}
 
@@ -83,4 +98,8 @@ func (f *Flag) Bool(name string) (bool, error) {
 // String returns a string if it exists in the set flags.
 func (f Flag) String(name string) (string, error) {
 	return f.value(name)
+}
+
+func defaultsPrinter() string {
+	return "This is the default \"defaults\" message from configeur. You should probably change it\n"
 }

@@ -17,7 +17,7 @@ var (
 
 func init() {
 	// add configuration middlewears to the stack
-	conf.Use(configeur.NewFlag())
+	conf.Use(configeur.NewFlagWithUsage(usage))
 	conf.Use(configeur.NewJSONFromFile("echo.json"))
 	conf.Use(configeur.NewEnvironment())
 }
@@ -33,4 +33,8 @@ func main() {
 			fmt.Print("\n")
 		}
 	}
+}
+
+func usage() string {
+	return "Echo is the best message echo-er available in your terminal!\nUse the amount flag to set how many times you to echo\nmessage for what you want to echo\nand newlines for whether you want breaks in between messages\n"
 }

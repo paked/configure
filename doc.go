@@ -14,8 +14,12 @@
 //	  Int(name string) (int, error)
 // 	  Bool(name string) (int, error)
 // 	  String(name string) (string, error)
+// 	  Setup() error
 //  }
-// That is an, Int method, String method and a Bool method. These functions are used to retrieve their respective data types.
+// That is an, Int method, String method and a Bool method. These functions are used to retrieve their respective data types. A setup method is
+// also required, where the Checker should initialize itself and throw
+// any errors.
+//
 // If you do create your own Checkers I would be more than happy to add a link to the README in the github repository.
 //
 package configeur
