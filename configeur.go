@@ -28,72 +28,60 @@ type Configeur struct {
 	stack   []Checker          // A list of all the "middlewear" which is used to find a value
 }
 
+// IntVar binds a provided *int to a flag value.
+func (c *Configeur) IntVar(value *int, name string, def int, description string) {
+	c.option(value, name, def, description, intType)
+}
+
 // Int defines an int flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
 func (c *Configeur) Int(name string, def int, description string) *int {
-	v := c.option(name, def, description, intType)
-	i, ok := v.(*int)
-
-	if !ok {
-		fmt.Printf("could not retrieve pointer to value for name %v\n", name)
-		return nil
-	}
+	i := new(int)
+	c.IntVar(i, name, def, description)
 
 	return i
 }
 
+// StringVar binds a provided *string to a flag value.
+func (c *Configeur) StringVar(value *string, name string, def string, description string) {
+	c.option(value, name, def, description, stringType)
+}
+
 // String defines a string flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
-func (c *Configeur) String(name, def, description string) *string {
-	v := c.option(name, def, description, stringType)
-	s, ok := v.(*string)
-
-	if !ok {
-		fmt.Printf("could not retrieve pointer to value for name %v\n", name)
-		return nil
-	}
+func (c *Configeur) String(name string, def string, description string) *string {
+	s := new(string)
+	c.StringVar(s, name, def, description)
 
 	return s
+}
+
+// BoolVar binds a provided *bool to a flag value.
+func (c *Configeur) BoolVar(value *bool, name string, def bool, description string) {
+	c.option(value, name, def, description, boolType)
 }
 
 // Bool defines a bool flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
 func (c *Configeur) Bool(name string, def bool, description string) *bool {
-	v := c.option(name, def, description, boolType)
-	b, ok := v.(*bool)
-
-	if !ok {
-		fmt.Printf("could not retrieve pointer to that value\n")
-		return nil
-	}
+	b := new(bool)
+	c.BoolVar(b, name, def, description)
 
 	return b
 }
 
-// option returns a pointer of a type specified through the valueType parameter.
-//
-// note: You could potentially find the value to be pointed to through the def
-// parameter, but this would pose an issue when one is not provided.
-func (c *Configeur) option(name string, def interface{}, description string, typ valueType) interface{} {
+// option will bind a pointer to a value provided in the value parameter to
+// set flag value.
+func (c *Configeur) option(value interface{}, name string, def interface{}, description string, typ valueType) {
 	opt := &option{
 		name:        name,
 		def:         def,
 		description: description,
 		typ:         typ,
+		value:       value,
 	}
 
 	c.options[name] = opt
-
-	switch opt.typ {
-	case stringType:
-		opt.value = new(string)
-	case intType:
-		opt.value = new(int)
-	case boolType:
-		opt.value = new(bool)
-	}
-
-	return opt.value
 }
 
 // Use adds a variable amount of Checkers onto the stack.
