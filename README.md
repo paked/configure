@@ -1,5 +1,8 @@
 # configeur
-configeur is an easy to use multi-layer configuration system. It has an API inspired by [negroni](http://godoc.org/github.com/codegangsta/negroni) and the [flag](http://godoc.org/flag) package.
+Configeur is a Go package that gives you easy configuration of your project through redundancy. It has an API inspired by [negroni](http://godoc.org/github.com/codegangsta/negroni) and the [flag](http://godoc.org/flag) package.
+
+## What is it?
+Configeur aims to be the `github.com/codegangsta/negroni` of configuration. It is a `Checker` manager, in the same way `negroni` managers `net/http` middlewear. A `Checker` is a way of retrieving configuration values from a source, these can be easily made by completing the [Checker interface](http://godoc.org/github.com/paked/configeur#Checker). The idea is that you as a developer provide Configeur with a selection of `Checker`'s, either built in or not and it will iterate over them attempting to find values defined by the developer. If a `Checker` is successful in its retrieval, then Configeur will stop the iteration for that value. If it is not then Configeur will attempt the next `Checker` in chronological order.
 
 # Getting Started
 After you have installed Go (and have made sure to correctly setup your [GOPATH](http://golang.org/doc/code.html#GOPATH)) create a new `.go` file, maybe `hello.go`.
