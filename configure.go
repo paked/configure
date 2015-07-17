@@ -20,22 +20,22 @@ type Checker interface {
 	Bool(name string) (bool, error)
 }
 
-// Configeur is a stack of Checkers which are used to retrieve configuration values. It has a
+// Configure is a stack of Checkers which are used to retrieve configuration values. It has a
 // similar API as the flag package in the standard library, and is also partially
 // inspired by negroni. Checkers are evaluated in the same order they are added.
-type Configeur struct {
+type Configure struct {
 	options map[string]*option // A map of all of the provided options
 	stack   []Checker          // A list of all the "middlewear" which is used to find a value
 }
 
 // IntVar binds a provided *int to a flag value.
-func (c *Configeur) IntVar(value *int, name string, def int, description string) {
+func (c *Configure) IntVar(value *int, name string, def int, description string) {
 	c.option(value, name, def, description, intType)
 }
 
 // Int defines an int flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
-func (c *Configeur) Int(name string, def int, description string) *int {
+func (c *Configure) Int(name string, def int, description string) *int {
 	i := new(int)
 	c.IntVar(i, name, def, description)
 
@@ -43,13 +43,13 @@ func (c *Configeur) Int(name string, def int, description string) *int {
 }
 
 // StringVar binds a provided *string to a flag value.
-func (c *Configeur) StringVar(value *string, name string, def string, description string) {
+func (c *Configure) StringVar(value *string, name string, def string, description string) {
 	c.option(value, name, def, description, stringType)
 }
 
 // String defines a string flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
-func (c *Configeur) String(name string, def string, description string) *string {
+func (c *Configure) String(name string, def string, description string) *string {
 	s := new(string)
 	c.StringVar(s, name, def, description)
 
@@ -57,13 +57,13 @@ func (c *Configeur) String(name string, def string, description string) *string 
 }
 
 // BoolVar binds a provided *bool to a flag value.
-func (c *Configeur) BoolVar(value *bool, name string, def bool, description string) {
+func (c *Configure) BoolVar(value *bool, name string, def bool, description string) {
 	c.option(value, name, def, description, boolType)
 }
 
 // Bool defines a bool flag with a name, default and description. The return value
 // is a pointer which will be populated with the value of the flag.
-func (c *Configeur) Bool(name string, def bool, description string) *bool {
+func (c *Configure) Bool(name string, def bool, description string) *bool {
 	b := new(bool)
 	c.BoolVar(b, name, def, description)
 
@@ -72,7 +72,7 @@ func (c *Configeur) Bool(name string, def bool, description string) *bool {
 
 // option will bind a pointer to a value provided in the value parameter to
 // set flag value.
-func (c *Configeur) option(value interface{}, name string, def interface{}, description string, typ valueType) {
+func (c *Configure) option(value interface{}, name string, def interface{}, description string, typ valueType) {
 	opt := &option{
 		name:        name,
 		def:         def,
@@ -85,11 +85,11 @@ func (c *Configeur) option(value interface{}, name string, def interface{}, desc
 }
 
 // Use adds a variable amount of Checkers onto the stack.
-func (c *Configeur) Use(checkers ...Checker) {
+func (c *Configure) Use(checkers ...Checker) {
 	c.stack = append(c.stack, checkers...)
 }
 
-func (c *Configeur) setup() {
+func (c *Configure) setup() {
 	for _, checker := range c.stack {
 		err := checker.Setup()
 		if err != nil {
@@ -101,7 +101,7 @@ func (c *Configeur) setup() {
 
 // Parse populates all of the defined arguments with their values provided by
 // the stacks Checkers.
-func (c *Configeur) Parse() {
+func (c *Configure) Parse() {
 	c.setup()
 	for _, opt := range c.options {
 		changed := false
@@ -140,10 +140,10 @@ func (c *Configeur) Parse() {
 	}
 }
 
-// New returns a pointer to a new Configeur instance with a stack
+// New returns a pointer to a new Configure instance with a stack
 // provided through the variadic stack variable.
-func New(stack ...Checker) *Configeur {
-	c := &Configeur{
+func New(stack ...Checker) *Configure {
+	c := &Configure{
 		options: make(map[string]*option),
 		stack:   stack,
 	}
