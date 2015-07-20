@@ -86,4 +86,4 @@ If you write your own Checker I would *LOVE* to see it, create a PR with a new e
 # Note
 As you may have noticed, I am not *particularly* great at english. If you notice a way to de-garble a few of my sentences be sure to let me know... Not only I, but future readers will be greatful too :)
 
-###### designed and implemented by [Harrison Shoebridge](http://github.com/paked)
+###### *designed and implemented by [Harrison Shoebridge](http://github.com/paked)*
