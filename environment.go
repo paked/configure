@@ -1,4 +1,4 @@
-package configeur
+package configure
 
 import (
 	"errors"

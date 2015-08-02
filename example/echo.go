@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/paked/configeur"
+	"github.com/paked/configure"
 )
 
 var (
 	// set up a configeur instance with no stack
-	conf = configeur.New()
+	conf = configure.New()
 	// declare flags / things to configure
 	amount   = conf.Int("amount", 0, "how many times you want the string repeated!")
 	message  = conf.String("message", "Echo!", "a selected string")
@@ -17,9 +17,9 @@ var (
 
 func init() {
 	// add configuration middlewears to the stack
-	conf.Use(configeur.NewFlagWithUsage(usage))
-	conf.Use(configeur.NewJSONFromFile("echo.json"))
-	conf.Use(configeur.NewEnvironment())
+	conf.Use(configure.NewFlagWithUsage(usage))
+	conf.Use(configure.NewJSONFromFile("echo.json"))
+	conf.Use(configure.NewEnvironment())
 }
 
 func main() {

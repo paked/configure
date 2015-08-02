@@ -1,4 +1,4 @@
-// Package configeur is an easy to use multi-layer configuration system.
+// Package configure is an easy to use multi-layer configuration system.
 //
 // Examples can be found in the example folder (http://github.com/paked/configeur/blob/master/examples/)
 // as well as a getting started guide in the main README file (http://github.com/paked/configeur).
@@ -22,4 +22,4 @@
 //
 // If you do create your own Checkers I would be more than happy to add a link to the README in the github repository.
 //
-package configeur
+package configure
