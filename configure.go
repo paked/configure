@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// Checker is the interface which external checkers must comply to. In the configeur
+// Checker is the interface which external checkers must comply to. In the configure
 // implementation, if one Checker fails the next one in the stack should be called.
 type Checker interface {
 	// Setup initializes the Checker

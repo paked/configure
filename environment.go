@@ -12,7 +12,7 @@ func NewEnvironment() *Environment {
 	return &Environment{}
 }
 
-// Environment is a configeur.Checker. It retrieves values from the host OS's environment variables.
+// Environment is a Checker. It retrieves values from the host OS's environment variables.
 // In this process, it will take a flag-like name, and convert it to a environmnet-like name. The process
 // for this is to change all characters to upper case, and then replace hyphons with underscores.
 type Environment struct {

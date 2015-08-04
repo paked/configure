@@ -1,9 +1,9 @@
 // Package configure is an easy to use multi-layer configuration system.
 //
-// Examples can be found in the example folder (http://github.com/paked/configeur/blob/master/examples/)
-// as well as a getting started guide in the main README file (http://github.com/paked/configeur).
+// Examples can be found in the example folder (http://github.com/paked/configure/blob/master/examples/)
+// as well as a getting started guide in the main README file (http://github.com/paked/configure).
 //
-// configeur makes use of Checkers, which are used to retrieve values from their respective data sources.
+// configure makes use of Checkers, which are used to retrieve values from their respective data sources.
 // There are three built in Checkers, Environment, Flag and JSON. Environment retrieves environment variables.
 // Flag retrieves variables within the flags of a command. JSON retrieves values from a JSON file/blob. Checkers
 // can be essentially thought of as "middlewear for configuration", in fact parts of the package API was inspired by

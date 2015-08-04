@@ -101,5 +101,5 @@ func (f Flag) String(name string) (string, error) {
 }
 
 func defaultsPrinter() string {
-	return "This is the default \"defaults\" message from configeur. You should probably change it\n"
+	return "This is the default \"defaults\" message from configure. You should probably change it\n"
 }
