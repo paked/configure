@@ -52,7 +52,7 @@ func init() {
   conf.Use(configure.NewFlag())
 }
 ```
-The configuration stage is where you configure `configure` by adding Checkers to the stack. Checkers are objects which will attempt to retrieve your variables from their respective data sources. When a `Checker` fails the next one in the stack is called, the stack is in the same order that the `Checker`'s were added in. You can configure `configeur` anytime before you call the `conf.Parse()` function, but the `init()` function provides a reliable place to do so.
+The configuration stage is where you configure `configure` by adding Checkers to the stack. Checkers are objects which will attempt to retrieve your variables from their respective data sources. When a `Checker` fails the next one in the stack is called, the stack is in the same order that the `Checker`'s were added in. You can configure `configure` anytime before you call the `conf.Parse()` function, but the `init()` function provides a reliable place to do so.
 
 ### Stage Three : Usage
 ```go
@@ -64,7 +64,7 @@ func main() {
 The final stage is where you can actually use the variables you have declared. After using `conf.Parse()` your variables should then be populated and accesible by dereferencing it (`name`).
 
 ## Execution
-If you were to run this code in its current state it would print `Hello, Harrison` because `Harrison` is the default value provided in the declaration stage. But if you provide `--name=Johny` when you execute the command it will print `Hello, Johny`. At this point `configure` is behaving like the default `flag` package through the `Flag` Checker. Now, run `export NAME=Jarvis` in your command line and execute the program again and ommit the entire `--name=`command line flag. You will see a `Hello, Jarvis`, as `configeur` has fallen back upon the `Environment` Checker. Note that, if you provide both means of input the environment variable will be used, as it has higher priority as it was added before the `Flag` Checker in the configuration stage. This works with any number of Checkers from any source, as long as the fulfil [the `Checker` interface](http://godoc.org/github.com/paked/configeur#Checker).
+If you were to run this code in its current state it would print `Hello, Harrison` because `Harrison` is the default value provided in the declaration stage. But if you provide `--name=Johny` when you execute the command it will print `Hello, Johny`. At this point `configure` is behaving like the default `flag` package through the `Flag` Checker. Now, run `export NAME=Jarvis` in your command line and execute the program again and ommit the entire `--name=`command line flag. You will see a `Hello, Jarvis`, as `configure` has fallen back upon the `Environment` Checker. Note that, if you provide both means of input the environment variable will be used, as it has higher priority as it was added before the `Flag` Checker in the configuration stage. This works with any number of Checkers from any source, as long as the fulfil [the `Checker` interface](http://godoc.org/github.com/paked/configure#Checker).
 
 ## Further Reading
 [More package documentation can be found on godoc](http://godoc.org/pkg/github.com/paked/configure).
