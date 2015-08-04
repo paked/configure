@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	// set up a configeur instance with no stack
+	// set up a configure instance with no default stack
 	conf = configure.New()
 	// declare flags / things to configure
 	amount   = conf.Int("amount", 0, "how many times you want the string repeated!")
