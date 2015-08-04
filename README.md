@@ -84,6 +84,6 @@ If you notice something that you feel is broken or missing in configure feel fre
 If you write your own Checker I would *LOVE* to see it, create a PR with a new entry in the table!
 
 # Note
-As you may have noticed, I am not *particularly* great at english. If you notice a way to de-garble a few of my sentences be sure to let me know... Not only I, but future readers will be greatful too :)
+As you may have noticed, I am not *particularly* great at english. If you notice a way to de-garble a few of my sentences be sure to let me know... Not only I, but future readers will be grateful too :)
 
 ###### *designed and implemented by [Harrison Shoebridge](http://github.com/paked)*
