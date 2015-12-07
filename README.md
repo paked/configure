@@ -2,7 +2,7 @@
 Configure is a Go package that gives you easy configuration of your project through redundancy. It has an API inspired by [negroni](http://godoc.org/github.com/codegangsta/negroni) and the [flag](http://godoc.org/flag) package.
 
 ## What is it?
-Configeur aims to be the `github.com/codegangsta/negroni` of configuration. It is a `Checker` manager, in the same way `negroni` managers `net/http` middlewear. A `Checker` is a way of retrieving configuration values from a source, these can be easily made by completing the [Checker interface](http://godoc.org/github.com/paked/configure#Checker). The idea is that you as a developer provide Configeur with a selection of `Checker`'s, either built in or not and it will iterate over them attempting to find values defined by the developer. If a `Checker` is successful in its retrieval, then Configeur will stop the iteration for that value. If it is not then Configeur will attempt the next `Checker` in chronological order.
+Configure aims to be the `github.com/codegangsta/negroni` of configuration. It is a `Checker` manager, in the same way `negroni` manages `net/http` middleware. A `Checker` is a way of retrieving configuration values from a source: these can be easily made by completing the [Checker interface](http://godoc.org/github.com/paked/configure#Checker). The idea is that you as a developer provide Configure with a selection of `Checker`s, either built in or not and it will iterate over them attempting to find values defined by the developer. If a `Checker` is successful in its retrieval, then Configure will stop the iteration for that value. If it is not then Configure will attempt the next `Checker` in chronological order.
 
 # Getting Started
 After you have installed Go (and have made sure to correctly setup your [GOPATH](http://golang.org/doc/code.html#GOPATH)) create a new `.go` file, maybe `hello.go`.
@@ -43,7 +43,7 @@ var (
   name = conf.String("name", "Harrison", "The name you want to greet")
 )
 ```
-The declaration stage is important because it defines exactly what you CAN configure! First, `conf` is created which is your key to adding Checkers and retrieving variables. After that you begin properly declaring your variables, in this example only a string is declared but in practice you can use any number of `String`'s, `Int`'s or `Bool`'s. The variables returned by these methods are pointers to their respective types.
+The declaration stage is important because it defines exactly what you CAN configure! First, `conf` is created which is your key to adding Checkers and retrieving variables. After that you begin properly declaring your variables, in this example only a string is declared but in practice you can use any number of `String`s, `Int`s or `Bool`s. The variables returned by these methods are pointers to their respective types.
 
 ### Stage Two : Configuration
 ```go
@@ -84,6 +84,6 @@ If you notice something that you feel is broken or missing in configure feel fre
 If you write your own Checker I would *LOVE* to see it, create a PR with a new entry in the table!
 
 # Note
-As you may have noticed, I am not *particularly* great at english. If you notice a way to de-garble a few of my sentences be sure to let me know... Not only I, but future readers will be grateful too :)
+As you may have noticed, I am not *particularly* great at English. If you notice a way to de-garble a few of my sentences be sure to let me know... Not only I, but future readers will be grateful too :)
 
 ###### *designed and implemented by [Harrison Shoebridge](http://github.com/paked)*
