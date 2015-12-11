@@ -40,21 +40,25 @@ func (h *HCL) Setup() error {
 	if err != nil {
 		return err
 	}
+
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r)
 	s := buf.String()
+
 	//first parse the hcl file
 	obj, err := hcl.Parse(s)
 	if err != nil {
 		return err
 	}
+
 	h.values = make(map[string]interface{})
-	//then decode the object
+
+	// then decode the object
 	if err = hcl.DecodeObject(&h.values, obj); err != nil {
 		return err
 	}
-	return nil
 
+	return nil
 }
 
 func (h *HCL) value(name string) (interface{}, error) {
@@ -62,23 +66,27 @@ func (h *HCL) value(name string) (interface{}, error) {
 	if !ok {
 		return nil, errors.New("variable does not exist")
 	}
+
 	return val, nil
 }
 
-//Int returns an int if it exists within the HCL io.Reader
+// Int returns an int if it exists within the HCL io.Reader
 func (h *HCL) Int(name string) (int, error) {
 	v, err := h.value(name)
 	if err != nil {
 		return 0, err
 	}
+
 	f, ok := v.(float64)
 	if !ok {
 		i, ok := v.(int)
 		if !ok {
 			return v.(int), errors.New(fmt.Sprintf("%T unable", v))
 		}
+
 		return i, nil
 	}
+
 	return int(f), nil
 }
 
@@ -88,6 +96,7 @@ func (h *HCL) Bool(name string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	return v.(bool), nil
 }
 
@@ -97,5 +106,6 @@ func (h *HCL) String(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return v.(string), nil
 }
