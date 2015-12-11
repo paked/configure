@@ -34,6 +34,7 @@ type HCL struct {
 	gen    func() (io.Reader, error)
 }
 
+// Setup initializes the HCL Checker
 func (h *HCL) Setup() error {
 	r, err := h.gen()
 	if err != nil {

@@ -32,6 +32,7 @@ type JSON struct {
 	gen    func() (io.Reader, error)
 }
 
+//Setup initializes the JSON Checker
 func (j *JSON) Setup() error {
 	r, err := j.gen()
 	if err != nil {
