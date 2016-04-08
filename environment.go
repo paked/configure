@@ -8,6 +8,7 @@ import (
 )
 
 // NewEnvironment creates a new instance of the Environment Checker.
+// Note: If you request a value "peanut-butter", the environment variable that will be checked is `PEANUT_BUTTER`.
 func NewEnvironment() *Environment {
 	return &Environment{}
 }
