@@ -80,6 +80,7 @@ If you notice something that you feel is broken or missing in configure feel fre
 |Environment| ***[builtin]*** http://github.com/paked/configure |`NewEnvironment()` | Environment checks the os environment variables for values |
 |JSON|***[builtin]*** http://github.com/paked/configure |`NewJSON(io.Reader)`| Retrieves values from an `io.Reader` containing JSON |
 |Flag|***[builtin]*** http://github.com/paked/configure |`NewFlag()`| Retrieve flagged values from `os.Args` in a `--x=y` format|
+|HCL|***[builtin]*** http://github.com/paked/configure |`NewHCL(io.Reader)`| Retrieve values from an `io.Reader` containing HCL|
 
 If you write your own Checker I would *LOVE* to see it, create a PR with a new entry in the table!
 
