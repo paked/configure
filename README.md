@@ -54,7 +54,7 @@ func init() {
 ```
 The configuration stage is where you configure `configure` by adding Checkers to the stack. Checkers are objects which will attempt to retrieve your variables from their respective data sources. When a `Checker` fails the next one in the stack is called, the stack is in the same order that the `Checker`'s were added in. You can configure `configure` anytime before you call the `conf.Parse()` function, but the `init()` function provides a reliable place to do so.
 
-*note:* When using the `Environment `Checker`, all keys will be translated to uppercase and have dashes replaced with underscores (ie. `hello-world` to `HELLO_WORLD`).
+*note:* When using the `Environment Checker`, all keys will be translated to uppercase and have dashes replaced with underscores (ie. `hello-world` to `HELLO_WORLD`).
 
 ### Stage Three : Usage
 ```go
