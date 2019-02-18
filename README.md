@@ -1,4 +1,6 @@
 # Configure
+[![GoDoc](https://godoc.org/github.com/paked/configure?status.svg)](https://godoc.org/github.com/paked/configure)
+
 Configure is a Go package that gives you easy configuration of your project through redundancy. It has an API inspired by [negroni](http://godoc.org/github.com/codegangsta/negroni) and the [flag](http://godoc.org/flag) package.
 
 ## What is it?
