@@ -85,6 +85,8 @@ If you notice something that you feel is broken or missing in configure feel fre
 |JSON|***[builtin]*** http://github.com/paked/configure |`NewJSON(io.Reader)`| Retrieves values from an `io.Reader` containing JSON |
 |Flag|***[builtin]*** http://github.com/paked/configure |`NewFlag()`| Retrieve flagged values from `os.Args` in a `--x=y` format|
 |HCL|***[builtin]*** http://github.com/paked/configure |`NewHCL(io.Reader)`| Retrieve values from an `io.Reader` containing HCL|
+|MongoDb|***[external]*** https://github.com/LouAdrien/configuremongo |`NewMongo("mongodb://127.0.0.1:27017/test_conf_db","confs")`| Retrieve values from an `io.Reader` containing HCL|
+
 
 If you write your own Checker I would *LOVE* to see it, create a PR with a new entry in the table!
 
